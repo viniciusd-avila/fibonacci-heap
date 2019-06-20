@@ -12,9 +12,7 @@
 # https://github.com/woodfrog/FibonacciHeap/blob/master/README.md
 # https://cs.stackexchange.com/a/7510
 
-## TODO
-# Implement a doubly linked list for the list of roots (Python lists are internally dynamic arrays)
-# Better represent the heap with __repr__
+from doublylinkedlist import *
 
 class HeapNode:
     # directed graph
@@ -30,11 +28,19 @@ class HeapNode:
         self.key=key
         
     def __repr__(self):
-        return 'Value: {} Key: {}'.format(self.value,self.key)
+        parent,child,r_s,l_s = list(map(lambda node: self.__get_value(node),
+                                    [self.parent,self.child,self.right_sibling,self.left_sibling]))
+        value,key = [self.value,self.key]
+        return '\nValue: {value}\nKey: {key}\nParent: {parent}\nChild: {child}\nRight sibling: {r_s}\nLeft sibling: {l_s}\n'.format(
+            value=value,key=key,parent=parent,child=child,r_s=r_s,l_s=l_s)
     
-class FibonacciHeap():
+    def __get_value(self,node,default=''):
+        return node.value if node is not None else default
+        
+    
+class FibonacciHeap:
     def __init__(self):
-        self.roots = []
+        self.roots = DoublyLinkedList()
         self.min_root = None
         self.number_of_nodes = 0
         self.dict = {}
@@ -53,7 +59,7 @@ class FibonacciHeap():
         node.right_sibling = node
         node.left_sibling = node
         self.dict[value] = node
-        self.roots.append(node)
+        self.roots.push(node,key)
         self.number_of_nodes += 1
         if self.min_root is None:
             self.min_root = node
@@ -73,7 +79,7 @@ class FibonacciHeap():
         self.cleanup()
         
         try:
-            self.min_root = min(self.roots, key=lambda x: x.key)
+            self.min_root = self.roots.min()
         except:
             print('Heap is empty')
         return min_root
@@ -85,7 +91,7 @@ class FibonacciHeap():
                 child.parent = None
                 next_child = child.right_sibling
                 child.right_sibling = child
-                self.roots.append(child)
+                self.roots.push(child,child.key)
                 child = next_child
                 if child.right_sibling == child:
                     break
@@ -103,14 +109,19 @@ class FibonacciHeap():
         else:
             root, child = [u, v]
             
+        print(root,child)
+            
         if root.child is not None:
             sibling = root.child
             child.right_sibling = sibling.right_sibling
-            child.left = sibling
+            child.left_sibling = sibling
             sibling.right_sibling = child
         root.child = child
         child.parent = root
         root.degree += 1
+        
+        print(root,child)
+        
         return root
     
     def cleanup(self):
@@ -118,26 +129,30 @@ class FibonacciHeap():
         root_array = [None for i in range(self.number_of_nodes)]
         
         for tree in self.roots:
-            t = tree
+            t = tree.value
             while root_array[t.degree] is not None:
                 u = root_array[t.degree]
                 root_array[t.degree] = None
                 t = self.merge(t,u)
             root_array[t.degree] = t
-        self.roots = list(filter(lambda root: root is not None,root_array))
+        self.roots = DoublyLinkedList()
+        for root in root_array:
+            if root is not None:
+                self.roots.push(root,root.key)
         
     def runaway(self,child,parent):
         if child.right_sibling == child:
+            print(child.right_sibling)
             parent.child = None
         else:
-            parent.child = child.left_sibling
+            parent.child = child.right_sibling
             child.left_sibling.right_sibling = child.right_sibling
             child.right_sibling.left_sibling = child.left_sibling
         parent.degree -= 1
         child.parent = None
         child.right_sibling = child
         child.marked = False
-        self.roots.append(child)
+        self.roots.push(child,child.key)
         
         grandparent = parent.parent
         if grandparent is not None:
