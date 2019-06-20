@@ -12,7 +12,7 @@
 # https://github.com/woodfrog/FibonacciHeap/blob/master/README.md
 # https://cs.stackexchange.com/a/7510
 
-from doublylinkedlist import *
+from doublylinkedlist import DoublyLinkedList
 
 class HeapNode:
     # directed graph
@@ -109,8 +109,6 @@ class FibonacciHeap:
         else:
             root, child = [u, v]
             
-        print(root,child)
-            
         if root.child is not None:
             sibling = root.child
             child.right_sibling = sibling.right_sibling
@@ -119,8 +117,6 @@ class FibonacciHeap:
         root.child = child
         child.parent = root
         root.degree += 1
-        
-        print(root,child)
         
         return root
     

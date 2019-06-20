@@ -12,8 +12,9 @@ class Node:
         return str(self.value)
     
 class DoublyLinkedList:
-    def __init__(self,head=None):
+    def __init__(self,head=None,tail=None):
         self.head=head
+        self.tail=tail
         
     def __iter__(self):
         node = self.head
@@ -25,8 +26,19 @@ class DoublyLinkedList:
         node = Node(value,key,self.head)
         if self.head is not None:
             self.head.prev = node
-        node.next = self.head
+            node.next = self.head
+        else:
+            self.tail = node
         self.head = node
+
+    def append(self,value,key=None):
+        node = Node(value,key,None,self.tail)
+        if self.tail is not None:
+            self.tail.next = node
+            node.prev = self.tail
+        else:
+            self.head = node
+        self.tail = node
     
     def __repr__(self):
         node = self.head
@@ -53,7 +65,9 @@ class DoublyLinkedList:
         
         if node.value == value:
             if node is self.head:
-                self.head = node.next    
+                self.head = node.next
+            if node is self.tail:
+                self.tail = node.prev
             if node.next is not None:
                 node.next.prev = node.prev
             if node.prev is not None:
