@@ -4,14 +4,6 @@
 # Fibonacci heap can be used as a priority queue by Dijkstra's shortest path algorithm
 # Heap property: the key of a child node must be greater or equal to the key of its parent node
 
-## Resources
-# https://en.wikipedia.org/wiki/Fibonacci_heap
-# https://www.cs.princeton.edu/~wayne/teaching/fibonacci-heap.pdf
-# https://www.cl.cam.ac.uk/teaching/1415/Algorithms/fibonacci.pdf
-# https://www.youtube.com/watch?v=nZ0nFTvQez0
-# https://github.com/woodfrog/FibonacciHeap/blob/master/README.md
-# https://cs.stackexchange.com/a/7510
-
 from doublylinkedlist import DoublyLinkedList
 
 class HeapNode:
@@ -47,7 +39,11 @@ class FibonacciHeap:
     
     def __repr__(self):
         return 'Roots {}\n'.format(self.roots)
-    
+
+    def heapify(self,iterable):
+        for value,key in iterable:
+            self.insert_with_priority(value,key)
+   
     def is_empty(self):
         return len(self.roots)==0
 
@@ -98,7 +94,6 @@ class FibonacciHeap:
             node.child = None
             
     def merge(self,v,u):
-        # binomial tree trivial merge
         # places whichever node has the largest key as the child of the other
         if v is None:
             return u

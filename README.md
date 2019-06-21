@@ -3,12 +3,10 @@
 Python implementation of Fibonacci heap, priority queue operations and doubly linked list.
 
 ## What is a heap?
-A heap is tree-like data structure in which the key of each node must be greater or equal to the key of its parent node. Heaps are useful for when you'd like to keep a set of elements sorted by their key while still being able to modify the keys or remove elements (nodes).
+A heap is tree-like data structure in which the key of each node must be greater or equal to the key of its parent node. Heaps are useful when you'd like to keep a set of elements sorted by their key while still being able to modify the keys or remove elements (nodes).
 
 ## Resources
-https://en.wikipedia.org/wiki/Fibonacci_heap
-https://www.cs.princeton.edu/~wayne/teaching/fibonacci-heap.pdf
-https://www.cl.cam.ac.uk/teaching/1415/Algorithms/fibonacci.pdf
-https://www.youtube.com/watch?v=nZ0nFTvQez0
-https://github.com/woodfrog/FibonacciHeap/blob/master/README.md
-https://cs.stackexchange.com/a/7510
+- *[Introduction to algorithms](https://amzn.com/0262032937)*, chapter 20.
+- *[Fibonacci heaps (efficient priority queue data structure)](https://www.cs.princeton.edu/~wayne/teaching/fibonacci-heap.pdf)*, Kevin Wayne lecture at Princeton University.
+- *[Fibonacci Heaps, Implementation and Operations](https://www.cl.cam.ac.uk/teaching/1415/Algorithms/fibonacci.pdf)*, 14th lecture of Cambridge University's 2014-15 Computer laboratory course.
+- *[IA Algorithms playlist](https://www.youtube.com/playlist?list=PLknxdt7zG11OwivCp3XniB62PBGNx2JaB)* by Foundations of Data Science YT channel
