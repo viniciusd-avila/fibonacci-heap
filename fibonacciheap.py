@@ -5,6 +5,7 @@
 # Heap property: the key of a child node must be greater or equal to the key of its parent node
 
 from doublylinkedlist import DoublyLinkedList
+from math import floor,log2
 
 class HeapNode:
     # directed graph
@@ -35,7 +36,7 @@ class FibonacciHeap:
         self.roots = DoublyLinkedList()
         self.min_root = None
         self.number_of_nodes = 0
-        self.dict = {}
+        self.hash_map = {}
     
     def __repr__(self):
         return 'Roots {}\n'.format(self.roots)
@@ -54,7 +55,7 @@ class FibonacciHeap:
         node = HeapNode(value,key)
         node.right_sibling = node
         node.left_sibling = node
-        self.dict[value] = node
+        self.hash_map[value] = node
         self.roots.push(node,key)
         self.number_of_nodes += 1
         if self.min_root is None:
@@ -68,16 +69,26 @@ class FibonacciHeap:
         # removes the node with the lowest key from the root list
         # places their children in the root list then call cleanup
         
+        if self.min_root is None:
+            print('Heap is empty')
+            return None
+
         min_root = self.min_root
         
         self.make_orphans(min_root)
         self.roots.remove(min_root)
+        self.number_of_nodes -= 1
         self.cleanup()
         
         try:
             self.min_root = self.roots.min()
+            # since the cleanup function forces the list of roots 
+            # to contain only one tree per degree,
+            # the worst cost of the min method is O(d) 
+            # where d is the maximum degree of anynode of the heap
         except:
-            print('Heap is empty')
+            self.min_root = None
+        
         return min_root
             
     def make_orphans(self,node):
@@ -117,15 +128,16 @@ class FibonacciHeap:
     
     def cleanup(self):
         # merge all roots of same degree
-        root_array = [None for i in range(self.number_of_nodes)]
+        root_array = [None] * floor(log2(self.number_of_nodes))
         
         for tree in self.roots:
             t = tree.value
-            while root_array[t.degree] is not None:
-                u = root_array[t.degree]
-                root_array[t.degree] = None
+            d = t.degree
+            while root_array[d] is not None:
+                u = root_array[d]
+                root_array[d] = None
                 t = self.merge(t,u)
-            root_array[t.degree] = t
+            root_array[d] = t
         self.roots = DoublyLinkedList()
         for root in root_array:
             if root is not None:
@@ -155,7 +167,7 @@ class FibonacciHeap:
     def decrease_key(self,value,new_key):
         # decrease key then if the heap property is broken,
         # remove node from tree and place it in the root list
-        node = self.dict[value]
+        node = self.hash_map[value]
         node.key = new_key
         parent = node.parent
         if parent is not None and node.key < parent.key:
