@@ -10,15 +10,16 @@ from math import floor,log2
 class HeapNode:
     # directed graph
     # each parent only points to a single child, each children points to their parent and two of their siblings
-    def __init__(self,value,key,degree=0):
+    def __init__(self,id,value,key):
+        self.id = id
+        self.value=value
+        self.key=key
         self.parent=None
         self.child=None
         self.right_sibling=None
         self.left_sibling=None
         self.marked=False
-        self.degree=degree
-        self.value=value
-        self.key=key
+        self.degree=0
         
     def __repr__(self):
         parent,child,r_s,l_s = list(map(lambda node: self.__get_value(node),
@@ -42,20 +43,20 @@ class FibonacciHeap:
         return 'Roots {}\n'.format(self.roots)
 
     def heapify(self,iterable):
-        for value,key in iterable:
-            self.insert_with_priority(value,key)
+        for id,value,key in iterable:
+            self.insert_with_priority(id,value,key)
    
     def is_empty(self):
-        return len(self.roots)==0
+        return True if len(self.roots)==0 else False
 
     def peek(self):
         return self.min_root
     
-    def insert_with_priority(self,value,key):
-        node = HeapNode(value,key)
+    def insert_with_priority(self,id,value,key):
+        node = HeapNode(id,value,key)
         node.right_sibling = node
         node.left_sibling = node
-        self.hash_map[value] = node
+        self.hash_map[id] = node
         self.roots.push(node,key)
         self.number_of_nodes += 1
         if self.min_root is None:
@@ -77,7 +78,6 @@ class FibonacciHeap:
         
         self.make_orphans(min_root)
         self.roots.remove(min_root)
-        self.number_of_nodes -= 1
         self.cleanup()
         
         try:
@@ -145,7 +145,6 @@ class FibonacciHeap:
         
     def runaway(self,child,parent):
         if child.right_sibling == child:
-            print(child.right_sibling)
             parent.child = None
         else:
             parent.child = child.right_sibling
@@ -168,9 +167,10 @@ class FibonacciHeap:
         # decrease key then if the heap property is broken,
         # remove node from tree and place it in the root list
         node = self.hash_map[value]
-        node.key = new_key
-        parent = node.parent
-        if parent is not None and node.key < parent.key:
-            self.runaway(node,parent)
-        if node.key < self.min_root.key:
-            self.min_root = node
+        if node.key > new_key:
+            node.key = new_key
+            parent = node.parent
+            if parent is not None and node.key < parent.key:
+                self.runaway(node,parent)
+            if node.key < self.min_root.key:
+                self.min_root = node

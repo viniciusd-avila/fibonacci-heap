@@ -15,7 +15,6 @@ class DoublyLinkedList:
     def __init__(self,head=None,tail=None):
         self.head=head
         self.tail=tail
-        self.length = 0
         
     def __iter__(self):
         node = self.head
@@ -24,7 +23,17 @@ class DoublyLinkedList:
             node = node.next
             
     def __len__(self):
-        return self.length
+        length = 0
+        for node in self:
+            length += 1
+        return length
+    
+    def car(self):
+        return self.head
+    
+    def cdr(self):
+        cdr = DoublyLinkedList(head=self.head.next,tail=self.tail)
+        return cdr
             
     def push(self,value,key=None):
         node = Node(value,key,self.head)
@@ -34,7 +43,6 @@ class DoublyLinkedList:
         else:
             self.tail = node
         self.head = node
-        self.length += 1
 
     def append(self,value,key=None):
         node = Node(value,key,None,self.tail)
@@ -77,7 +85,6 @@ class DoublyLinkedList:
                 node.next.prev = node.prev
             if node.prev is not None:
                 node.prev.next = node.next
-            self.length -= 1
             
         else:
             if node.next is not None:
