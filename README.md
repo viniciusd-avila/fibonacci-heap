@@ -1,6 +1,6 @@
 # Fibonacci Heap
 
-Python implementation of Fibonacci heap, priority queue operations and doubly linked list.
+Python implementation of Fibonacci heap, priority queue operations, doubly linked list and Dijkstra's shortest path algorithm.
 
 ## What is a heap?
 A heap is tree-like data structure in which the key of each node must be greater or equal to the key of its parent node. Heaps are useful when you'd like to keep a set of elements sorted by their key while still being able to modify the keys or remove elements (nodes).
