@@ -77,18 +77,18 @@ class FibonacciHeap:
         min_root = self.min_root
         
         self.make_orphans(min_root)
-        self.roots.remove(min_root)
-        self.cleanup()
+        root_node = self.roots.get(min_root)
         
         try:
-            self.min_root = self.roots.min()
-            # since the cleanup function forces the list of roots 
-            # to contain only one tree per degree,
-            # the worst cost of the min method is O(d) 
-            # where d is the maximum degree of anynode of the heap
+            if root_node.next is not None:
+                self.min_root = root_node.next.value
+            elif root_node.prev is not None:
+                self.min_root = root_node.prev.value 
+            self.roots.removeByPointer(root_node)
+            self.cleanup()
         except:
             self.min_root = None
-        
+                    
         return min_root
             
     def make_orphans(self,node):
@@ -114,6 +114,9 @@ class FibonacciHeap:
             root,child = [v, u]
         else:
             root, child = [u, v]
+            
+        if root.key <= self.min_root.key:
+            self.min_root = root
             
         if root.child is not None:
             sibling = root.child

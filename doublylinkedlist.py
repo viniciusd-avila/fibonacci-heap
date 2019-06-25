@@ -34,6 +34,11 @@ class DoublyLinkedList:
     def cdr(self):
         cdr = DoublyLinkedList(head=self.head.next,tail=self.tail)
         return cdr
+    
+    def get(self,value):
+        for node in self:
+            if node.value == value:
+                return node
             
     def push(self,value,key=None):
         node = Node(value,key,self.head)
@@ -72,19 +77,22 @@ class DoublyLinkedList:
                 min_node = node
         return min_node.value
     
-    def remove(self,value,node=None):
+    def removeByPointer(self,node):
+        if node is self.head:
+            self.head = node.next
+        if node is self.tail:
+            self.tail = node.prev
+        if node.next is not None:
+            node.next.prev = node.prev
+        if node.prev is not None:
+            node.prev.next = node.next
+    
+    def removeByValue(self,value,node=None):
         if node is None:
             node = self.head
         
         if node.value == value:
-            if node is self.head:
-                self.head = node.next
-            if node is self.tail:
-                self.tail = node.prev
-            if node.next is not None:
-                node.next.prev = node.prev
-            if node.prev is not None:
-                node.prev.next = node.next
+            self.removeByPointer(node)
             
         else:
             if node.next is not None:
